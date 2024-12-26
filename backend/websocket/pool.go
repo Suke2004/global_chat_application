@@ -7,7 +7,7 @@ import (
 type Pool struct {
 	Register   chan *Client
 	Unregister chan *Client
-	clients    map[*Client]bool
+	Clients    map[*Client]bool
 	Broadcast  chan Message
 }
 
@@ -23,21 +23,21 @@ func NewPool() *Pool {
 func (p *Pool) Start() {
 	for {
 		select {
-		case client := <-pool.Register:
+		case client := <-p.Register:
 			p.Clients[client] = true
 			fmt.Println("total connection pool:- ", len(p.Clients))
 			for k, _ := range p.Clients {
 				fmt.Println(k)
 				k.Conn.WriteJSON(Message{Type: 1, Body: "New  User Joined"})
 			}
-		case client := <-pool.Unregister:
+		case client := <-p.Unregister:
 			delete(p.Clients, client)
 			fmt.Println("total connetion pool:- ", len(p.Clients))
 			for k, _ := range p.Clients {
 				fmt.Println(k)
 				k.Conn.WriteJSON(Message{Type: 2, Body: "User Left"})
 			}
-		case msg := <-pool.Broadcast:
+		case msg := <-p.Broadcast:
 			fmt.Println("broadcasting a message")
 			for k, _ := range p.Clients {
 				if err := k.Conn.WriteJSON(msg); err != nil {

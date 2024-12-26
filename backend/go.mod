@@ -1,4 +1,4 @@
-module github.com/Suke2004/global_chat_application
+module chatapplication
 
 go 1.23.4
 
