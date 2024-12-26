@@ -1,4 +1,4 @@
-package customwebsocker
+package customwebsocket
 
 import (
 	"log"
