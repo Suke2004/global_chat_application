@@ -2,7 +2,6 @@ package main
 
 import (
 	customwebsocket "chatapplication/websocket"
-
 	"log"
 	"net/http"
 	"os"
@@ -13,6 +12,7 @@ import (
 
 const (
 	address = ":8080"
+	dbPath  = "./chat.db" // SQLite database file
 )
 
 func serverWs(pool *customwebsocket.Pool, w http.ResponseWriter, r *http.Request) {
@@ -39,11 +39,16 @@ func setupRoutes(pool *customwebsocket.Pool) {
 }
 
 func main() {
-	pool := customwebsocket.NewPool()
+	// Initialize SQLite database
+	db := customwebsocket.NewDatabase(dbPath)
+	defer db.Conn.Close() // Ensure the database connection is closed on exit
+
+	// Initialize WebSocket pool with database integration
+	pool := customwebsocket.NewPool(db)
 	go pool.Start()
 	setupRoutes(pool)
 
-	// Graceful shutdown
+	// Graceful shutdown handling
 	srv := &http.Server{
 		Addr:         address,
 		WriteTimeout: time.Second * 5,

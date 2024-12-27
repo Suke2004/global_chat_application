@@ -2,7 +2,9 @@ package customwebsocket
 
 import (
 	"fmt"
+	"log"
 	"sync"
+	"time"
 
 	"github.com/gorilla/websocket"
 )
@@ -14,26 +16,39 @@ type Client struct {
 }
 
 type Message struct {
-	Type int    `json:"type"`
-	Body string `json:"body"`
+	Type      int       `json:"type"`
+	Body      string    `json:"body"`
+	Sender    string    `json:"sender"`
+	Timestamp time.Time `json:"timestamp"`
+	SenderID  string    `json:"sender_id"` // Optional: To identify sender
 }
 
 func (c *Client) Read() {
 	defer func() {
+		// Unregister client from pool and close the connection
 		c.Pool.Unregister <- c
-		c.Conn.Close()
+		if err := c.Conn.Close(); err != nil {
+			log.Printf("Error closing connection: %v", err)
+		}
 	}()
 
 	for {
+		// Read incoming WebSocket message
 		msgType, msg, err := c.Conn.ReadMessage()
 		if err != nil {
-			fmt.Println(err)
+			// Log the error and break out of the loop
+			log.Printf("Error reading message: %v", err)
 			return
 		}
-		m := Message{Type: msgType, Body: string(msg)}
 
+		// Create message object to send through the broadcast channel
+		m := Message{
+			Type: msgType,
+			Body: string(msg),
+		}
+
+		// Broadcast message to all clients in the pool
 		c.Pool.Broadcast <- m
-
-		fmt.Println("msg recieved===>>>\n", m)
+		fmt.Printf("Message received: %s\n", m.Body)
 	}
 }
