@@ -1,0 +1,21 @@
+.chat-history {
+    padding: 1rem;
+    background-color: pink;
+    border-radius: 8px;
+    overflow-y: auto;
+    max-height: 400px; /* Optional: To create a scrollable area */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.chat-history-title {
+    margin: 0 0 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.chat-history-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}

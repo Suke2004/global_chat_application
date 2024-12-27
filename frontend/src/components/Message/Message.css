@@ -1,0 +1,11 @@
+.message {
+    padding: 0.5rem 1rem;
+    margin: 0.5rem 0;
+    border-radius: 8px;
+    background-color: rgb(148, 210, 225);
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    word-wrap: break-word;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
