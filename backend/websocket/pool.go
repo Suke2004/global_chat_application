@@ -2,6 +2,7 @@ package customwebsocket
 
 import (
 	"fmt"
+	"log"
 )
 
 type Pool struct {
@@ -39,6 +40,7 @@ func (p *Pool) Start() {
 			}
 		case msg := <-p.Broadcast:
 			fmt.Println("broadcasting a message")
+			log.Println("message:",msg)
 			for k, _ := range p.Clients {
 				if err := k.Conn.WriteJSON(msg); err != nil {
 					fmt.Println(err)

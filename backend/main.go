@@ -1,14 +1,14 @@
 package main
 
 import (
+	customwebsocket "chatapplication/websocket"
+
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
-
-	customwebsocket "chatapplication/websocket"
 )
 
 const (
